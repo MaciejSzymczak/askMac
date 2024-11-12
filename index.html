@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Maciej Szymczak">
+    <title>Ask Mac</title>
+
+  <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+  <script src="../bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
+      .bd-mode-toggle .dropdown-menu .active .bi {
+        display: block !important;
+      }
+    </style>
+
+    
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+      </symbol>
+    </svg>
+    
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="arrow-right-circle" viewBox="0 0 16 16">
+    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+  </symbol>
+</svg>
+
+<div class="col-lg-8 mx-auto p-4 py-md-5">
+  <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+    <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+    </a>
+  </header>
+
+  <main>
+    <h1 class="text-body-emphasis">Ask Mac</h1>
+    <p class="fs-5 col-md-8">Welcome to Ask Mac page! Enjoy the tools and useful stuff available here.
+</br>Ask Mac about anything on <a href="https://www.linkedin.com/in/maciej-szymczak-a818a011/" target="_blank">Linkedin</a>!
+	</p>
+
+    <!--div class="mb-5">
+      <a href="../examples/" class="btn btn-primary btn-lg px-4">Download examples</a>
+    </div-->
+
+    <hr class="col-3 col-md-2 mb-5">
+
+    <div class="row g-5">
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Online Tools</h2>
+        <p>Are you data analyst or data administrator? </p>
+		<p>Do you need to transform text file or clean it? Or draw an UML? Use Mac Tools to make your life simpler!</p>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/tools" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Mac Tools (Online)
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/tools/plantuml.php" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Drawing UML
+            </a>
+          </li>		  
+        </ul>
+      </div>
+
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Experimentation</h2>
+        <p>Playing with modern technologies</p>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/experimentation/ai_sin.html" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              AI: Approximate sinus using neutral network
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/experimentation/PlotlyGanttChart.html" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              JS: Plotly: Drawing GanttChart
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row g-5">
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Salesforce Tools</h2>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-Copy-Paste-Tool" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              SOQLExplorer and Copy-Paste Tool
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Sniper-for-Salesforce" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Sniper (Installed tool, windows users only)
+            </a>
+			<p>Sniper is like Dataloader, but you can implement business logic here unlike in Dataloader. Use Sniper to perform consecutive execution of apex code to merge records, lock the records or whatever you need.</p>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-Mass-Ownership-Transfer" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Ownership transfer
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-GoogleAPI-Enrich-Address" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Salesforce-GoogleAPI-Enrich-Address
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-Flow-Tools" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Flow Tools
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-LWC-Refreshing-Screen" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Refreshing the screen
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-Complex-Report" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Complex reports in Salesforce
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Salesforce-Metadata-Toolkit" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Search you metadata (Java)
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Other Tools</h2>
+		<p>With EOLCleaner you will prompty remove the end of lines from your csv file. What for? To make the file readable, to open it in execel, to import it into Oracle database.</p>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/EOLCleaner" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              EOLCleaner (Java)
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/OracleDb_IUD_audit" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Detect changes in tables (Oracle PL/SQL) 
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/OracleDB_Merger/blob/master/merger.sql" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Merge two tables (Oracle PL/SQL) 
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+	
+	
+    <div class="row g-5">
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Math</h2>
+        <p>Don't be limited into boring, real numbers. Get inside amazying world of complex numbers! Be enchanted by amazying math garden.</p>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/edu" rel="noopener" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Sandbox of complex numbers
+            </a>
+          </li>
+		  
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/experimentation/math.groupTheory.CyclicGroups.html" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Group theory: Playing with cyclic groups
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/experimentation/math.paradoxes.paradoxOfAscentants.html" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Paradoxes: Paradox of ascentants
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="http://soft.home.pl/experimentation/math.chaostheory.gameOfLife.html" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Chaos theory: Play John Conway's Game of Life
+            </a>
+          </li>
+		  
+		  
+        </ul>
+      </div>
+	  
+	  
+	  
+	  
+	  
+
+      <div class="col-md-6">
+        <h2 class="text-body-emphasis">Commercial</h2>
+        <p>Create a timetable of classes at your university using a professional tool. Integrate with other University software. Forget about Excel. Forget about scheduling errors. Free your life from stress. This tools is available in polish only, at least so far.</p>
+        <ul class="list-unstyled ps-0">
+          <li>
+            <a class="icon-link mb-1" href="http://www.plansoft.org/" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Plansoft.org
+            </a>
+          </li>
+          <li>
+            <a class="icon-link mb-1" href="https://github.com/MaciejSzymczak/Synchronizer" target="_blank">
+              <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"/></svg>
+              Google API: Calendar (Java)
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>	
+	
+  </main>
+  <footer class="pt-2 my-2 text-body-secondary border-top">
+    </br>Read about my company <a href="http://soft.home.pl/experimentation/about.html" target="_blank">Software Factory &middot; &copy; 2024.</a>
+  </footer>
+</div>
+
+    </body>
+</html>

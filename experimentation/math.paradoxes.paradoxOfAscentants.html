@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradox of Ascendants</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
+    .node circle {
+      fill: #69b3a2;
+      stroke: steelblue;
+      stroke-width: 2px;
+    }
+    .node text {
+      font: 12px sans-serif;
+      fill: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Paradox of Ascendants</h2>
+  <label for="generations">Enter Number of Generations:</label>
+  <input type="number" id="generations" value="4" min="1" max="10">
+  <button onclick="generateTree()">Generate Tree</button>
+
+  <svg id="treeContainer" width="800" height="600"></svg>
+
+  <script>
+    // Function to build hierarchical tree data
+    function buildTreeData(generation, maxGenerations) {
+      if (generation > maxGenerations) return null;
+
+      const node = { name: `Gen ${generation}`, children: [] };
+
+      // Each ancestor has two parents in the previous generation
+      if (generation < maxGenerations) {
+        node.children.push(buildTreeData(generation + 1, maxGenerations));
+        node.children.push(buildTreeData(generation + 1, maxGenerations));
+      }
+
+      return node;
+    }
+
+    // Function to generate the tree
+    function generateTree() {
+      const generations = parseInt(document.getElementById('generations').value);
+      if (isNaN(generations) || generations < 1) {
+        alert("Please enter a valid number of generations.");
+        return;
+      }
+
+      // Clear any previous SVG elements
+      d3.select("#treeContainer").selectAll("*").remove();
+
+      const data = buildTreeData(1, generations);
+
+      const width = 800;
+      const height = 600;
+
+      const svg = d3.select("#treeContainer"),
+            margin = {top: 20, right: 120, bottom: 20, left: 120},
+            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      const tree = d3.tree().size([height - margin.top - margin.bottom, width - margin.left - margin.right]);
+      const root = d3.hierarchy(data);
+
+      tree(root);
+
+      // Links between nodes
+      const link = g.selectAll(".link")
+        .data(root.links())
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("d", d3.linkHorizontal()
+          .x(d => d.y)
+          .y(d => d.x)
+        );
+
+      // Nodes
+      const node = g.selectAll(".node")
+        .data(root.descendants())
+        .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", d => "translate(" + d.y + "," + d.x + ")");
+
+      node.append("circle")
+        .attr("r", 5);
+
+      node.append("text")
+        .attr("dy", 3)
+        .attr("x", d => d.children ? -10 : 10)
+        .style("text-anchor", d => d.children ? "end" : "start")
+        .text(d => d.data.name);
+    }
+  </script>
+
+</body>
+</html>

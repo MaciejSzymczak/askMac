@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playing with cyclic groups</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 50%;
+      margin: 20px auto;
+      text-align: center;
+    }
+    td, th {
+      border: 1px solid black;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align: center;">Cyclic groups (rows) and its subgroups</h2>
+  <div id="tableContainer"></div>
+  <h3>What does this matrix show:<br/>
+  	In rows there is n. In cols there is k.<br/>
+	n means the order of cyclic group Zn.<br/>
+	k means the "jump" size.<br/>
+	The matrix shows "OK" when applying the jump k you are able to reach all elements of the group.<br/>
+	Nice conculsions: <br/>
+	Cyclic group Zn=12 has podgroups of size 2,3 and 4 but not 5.<br/> 
+	Cyclic group Zn where n is a prime has no podgroups (all elements in row have OK)<br/>
+  </h3>
+  <h4>Elements of cyclic group for n=12:</h4>
+  <p id="result1"></p>
+  <h4>k-th element of cyclic group for k=5:</h4>
+  <p id="result2"></p>
+
+  <script>
+    function generateSequence(N, M) {
+      const result = [];
+      while (result.length < M) {
+        for (let i = 1; i <= N; i++) {
+          if (result.length < M) {
+            result.push(i);
+          } else {
+            break;
+          }
+        }
+      }
+      return result;
+    }
+
+	function getElementsAtKIndices(sequence, K) {
+	  const result = [];
+	  
+	  // Loop through the sequence, starting at index K-1 (1-based K corresponds to 0-based index K-1)
+	  for (let i = K - 1; i < sequence.length; i += K) {
+		result.push(sequence[i]);
+	  }
+	  
+	  return result;
+	}
+
+	function containsAllNumbers(sequence, N) {
+	  // Create a set with numbers from 1 to N
+	  const requiredNumbers = new Set();
+	  for (let i = 1; i <= N; i++) {
+		requiredNumbers.add(i);
+	  }
+	  
+	  // Check each number in the sequence, removing it from the set if found
+	  for (const num of sequence) {
+		requiredNumbers.delete(num);
+		console.log('num:'+num);
+	  }
+
+	  // If the set is empty, all numbers from 1 to N were found in the sequence
+	  return requiredNumbers.size === 0;
+	}
+
+    function generateAndDisplaySequence() {
+      const N = 12;
+      const M = 1000;
+
+      const sequence = generateSequence(N, M);
+      document.getElementById('result1').textContent = sequence.join(', ');
+	  K=5;
+	  sequence2 = getElementsAtKIndices(sequence, K);
+      document.getElementById('result2').textContent = sequence2.join(', ') 
+	    + containsAllNumbers(sequence2, N);
+    }
+
+
+    function seqContainsAllNumbers(modulo,power) {
+      const N = modulo;
+      const M = 1000;
+
+      const sequence = generateSequence(N, M);
+	  K=power;
+	  sequence2 = getElementsAtKIndices(sequence, K);
+      return containsAllNumbers(sequence2, N);
+    }
+
+    function detailedExplanation() {
+      const N = 12;
+      const M = 1000;
+
+      const sequence = generateSequence(N, M);
+      document.getElementById('result1').textContent = 'Cycle:'+N+'    '+sequence.join(', ');
+	  K=5;
+	  sequence2 = getElementsAtKIndices(sequence, K);
+      document.getElementById('result2').textContent = 'K:'+K+'    '+sequence2.join(', ') 
+	    + containsAllNumbers(sequence2, N);
+    }
+
+
+    function generateTable() {
+      const rows = 24;
+      const cols = 24;
+
+      // Create table element
+      const table = document.createElement('table');
+
+      // Populate the table
+      for (let row = 1; row <= rows; row++) {
+        const tr = document.createElement('tr');
+        
+        for (let col = 1; col <= cols; col++) {
+          const td = document.createElement('td');
+		  if (row==1 && col!=1) td.textContent = col;
+		  if (row!=1 && col==1) td.textContent = row;
+		  if (row!=1 && col!=1) td.textContent = (seqContainsAllNumbers(row, col)?"OK":"  ");
+           // Call X(row, col) for cell content
+          tr.appendChild(td);
+        }
+
+        table.appendChild(tr);
+      }
+
+      // Append the table to the container div
+      document.getElementById('tableContainer').appendChild(table);
+	  detailedExplanation();
+    }
+
+    // Generate the table on page load
+    window.onload = generateTable;
+  </script>
+
+</body>
+</html>

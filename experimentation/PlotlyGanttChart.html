@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gantt Chart with Plotly</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="gantt-chart"></div>
+    <script>
+        // Define the data for the Gantt chart
+        var tasks = [
+            {
+                Task: 'CCC',
+                Start: '2025-01-20',
+                Finish: '2026-01-19',
+				Color: 'rgb(31, 119, 180)'
+            },
+            {
+                Task: 'BBB',
+                Start: '2024-01-19',
+                Finish: '2025-01-19',
+                Color: 'rgb(255, 127, 14)'
+            },
+            {
+                Task: 'AAA',
+                Start: '2023-02-21',
+                Finish: '2026-02-20',
+                Color: 'rgb(44, 160, 44)'
+            },
+        ];
+
+        // Transform data for Plotly
+        var data = tasks.map((task, index) => {
+            return {
+                x: [task.Start, task.Finish],
+                y: [task.Task, task.Task],
+                mode: 'lines',
+                line: {
+                    color: task.Color,
+                    width: 10
+                },
+                name: task.Task
+            };
+        });
+
+        // Define the layout for the chart
+        var layout = {
+            title: 'Gantt Chart',
+            showlegend: false,
+            xaxis: {
+                title: 'Time',
+                type: 'date'
+            },
+            yaxis: {
+                title: 'Tasks',
+                type: 'category'
+            }
+        };
+
+        // Render the plot
+        Plotly.newPlot('gantt-chart', data, layout);
+    </script>
+</body>
+</html>

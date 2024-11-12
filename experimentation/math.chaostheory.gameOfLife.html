@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conway's Game of Life</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(20, 20px);
+      grid-gap: 1px;
+    }
+    .cell {
+      width: 20px;
+      height: 20px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+    }
+    .alive {
+      background-color: black;
+    }
+    .dead {
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align: center;">Conway's Game of Life</h2>
+  <div id="grid" class="grid"></div>
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="startGame()">Start</button>
+    <button onclick="stopGame()">Stop</button>
+    <button onclick="randomizeGrid()">Randomize</button>
+    <button onclick="clearGrid()">Clear</button>
+  </div>
+
+  <script>
+    const rows = 20;
+    const cols = 20;
+    let grid = [];
+    let interval;
+
+    // Create the grid and add event listeners for toggling cells
+    function createGrid() {
+      const gridContainer = document.getElementById('grid');
+      gridContainer.innerHTML = '';
+      grid = Array.from({ length: rows }, () => Array(cols).fill(false));
+      
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell', 'dead');
+          cell.addEventListener('click', () => toggleCell(row, col));
+          gridContainer.appendChild(cell);
+        }
+      }
+    }
+
+    // Toggle cell state on click
+    function toggleCell(row, col) {
+      grid[row][col] = !grid[row][col];
+      updateCellDisplay(row, col);
+    }
+
+    // Update cell color based on its state
+    function updateCellDisplay(row, col) {
+      const cell = document.getElementById('grid').children[row * cols + col];
+      cell.classList.toggle('alive', grid[row][col]);
+      cell.classList.toggle('dead', !grid[row][col]);
+    }
+
+    // Apply the Game of Life rules
+    function nextGeneration() {
+      const newGrid = grid.map((row, r) =>
+        row.map((cell, c) => {
+          const aliveNeighbors = countAliveNeighbors(r, c);
+          if (cell) {
+            return aliveNeighbors === 2 || aliveNeighbors === 3;
+          } else {
+            return aliveNeighbors === 3;
+          }
+        })
+      );
+
+      // Update grid and display
+      grid = newGrid;
+      updateDisplay();
+    }
+
+    // Count alive neighbors of a cell
+    function countAliveNeighbors(row, col) {
+      let aliveCount = 0;
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) continue; // Skip the cell itself
+          const newRow = row + i;
+          const newCol = col + j;
+          if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+            aliveCount += grid[newRow][newCol] ? 1 : 0;
+          }
+        }
+      }
+      return aliveCount;
+    }
+
+    // Update the display based on the grid state
+    function updateDisplay() {
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          updateCellDisplay(row, col);
+        }
+      }
+    }
+
+    // Randomize the grid state
+    function randomizeGrid() {
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          grid[row][col] = Math.random() > 0.7;
+        }
+      }
+      updateDisplay();
+    }
+
+    // Clear the grid
+    function clearGrid() {
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          grid[row][col] = false;
+        }
+      }
+      updateDisplay();
+    }
+
+    // Start the game loop
+    function startGame() {
+      if (!interval) {
+        interval = setInterval(nextGeneration, 300);
+      }
+    }
+
+    // Stop the game loop
+    function stopGame() {
+      clearInterval(interval);
+      interval = null;
+    }
+
+    // Initialize the grid on page load
+    window.onload = createGrid;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sinusoid + Neural Network Prediction</title>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brain.js/2.0.0-beta.2/brain-browser.min.js"></script>
+
+</head>
+<body>
+    <div id="plot"></div>
+
+    <script>
+	
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }		
+	
+        // Generowanie danych dla sinusoidy
+        const data = [];
+        const step = (2 * Math.PI) / 360;
+        for (let x = 0; x <= 2 * Math.PI; x += step) {
+            const y = Math.abs(Math.sin(x));
+            data.push({ x, y });
+        }
+
+        // Wizualizacja rzeczywistych danych sinusoidalnych
+        const traceReal = {
+            x: data.map(point => point.x),
+            y: data.map(point => point.y),
+            mode: 'lines',
+            name: 'Sinus (Real)',
+            line: { color: 'green' }
+        };
+
+        // Tworzenie i trenowanie sieci neuronowej za pomocą Brain.js
+        const net = new brain.NeuralNetwork({ hiddenLayers: [5] }); //, activation: 'relu'
+
+        let trainingData = data.map(point => ({
+            input: { x: point.x },
+            output: { y: point.y }
+        }));
+		
+		trainingData = shuffleArray (trainingData);
+
+        net.train(trainingData, {
+            log: true,
+            logPeriod: 12,
+            iterations: 5000,
+            errorThresh: 0.0005
+        });
+
+        // Przewidywanie danych przy użyciu wytrenowanej sieci
+        const prediction = [];
+        for (let x = 0; x <= 4 * Math.PI; x += step) {
+            const predictedY = net.run({ x }).y;
+            prediction.push({ x, y: predictedY });
+        }
+
+        // Wizualizacja przewidywań
+        const tracePredicted = {
+            x: prediction.map(point => point.x),
+            y: prediction.map(point => point.y),
+            mode: 'lines',
+            name: 'Neural Network (Predicted)',
+            line: { color: 'red' }
+        };
+
+        // Rysowanie wykresu
+        const layout = {
+            title: 'Sinusoid with Neural Network Predictions',
+            xaxis: { title: 'X' },
+            yaxis: { title: 'Y' },
+            showlegend: true
+        };
+
+        const plotData = [traceReal, tracePredicted];
+
+        Plotly.newPlot('plot', plotData, layout);
+    </script>
+</body>
+</html>
