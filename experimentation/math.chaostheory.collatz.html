@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collatz Conjecture Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+
+    <h1>Collatz Conjecture Graph: if (n % 2 === 0) { n = n / 2; } else { n = 3 * n + 1;}</h1>
+    <label for="startNumber">Enter Starting Number (N): </label>
+    <input type="number" id="startNumber" min="1" value="27" onchange="generateCollatz()">
+    <button onclick="generateCollatz()">Generate Graph</button>
+
+    <canvas id="collatzChart" width="800" height="400"></canvas>
+
+    <script>
+   let chartInstance = null; // Variable to store the Chart instance
+
+function generateCollatz() {
+    // Get the starting number from the input
+    const startNumber = parseInt(document.getElementById("startNumber").value);
+    if (isNaN(startNumber) || startNumber < 1) {
+        alert("Please enter a positive integer.");
+        return;
+    }
+
+    // Generate the Collatz sequence
+    let sequence = [];
+    let n = startNumber;
+    while (n !== 1) {
+        sequence.push(n);
+        if (n % 2 === 0) {
+            n = n / 2;
+        } else {
+            n = 3 * n + 1;
+        }
+    }
+    sequence.push(1); // Add the final 1 to the sequence
+
+    // Create labels for the graph (step numbers)
+    const labels = Array.from({ length: sequence.length }, (_, i) => i + 1);
+
+    // Destroy existing chart instance if it exists
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    // Render the graph using Chart.js
+    const ctx = document.getElementById("collatzChart").getContext("2d");
+    chartInstance = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `Collatz Sequence for N=${startNumber}`,
+                data: sequence,
+                borderColor: "blue",
+                backgroundColor: "rgba(0, 0, 255, 0.1)",
+                borderWidth: 2,
+                pointRadius: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Step Number"
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "Value"
+                    }
+                }
+            }
+        }
+    });
+}
+generateCollatz();
+    </script>
+</body>
+</html>
