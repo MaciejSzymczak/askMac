@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+
+  <style type="text/css">
+    #mynetwork {
+      width: 100%;
+      height: 1200px;
+      border: 1px solid lightgray;
+    }
+  </style>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+  
+        function getNextCollatzNumber(n) {
+            if (n <= 0) {
+                return null;
+            }
+            return (n % 2 === 0) ? n / 2 : 3 * n + 1;
+        }
+
+        function generateCollatzTable(limit) {
+            let collatzTable = {};
+            for (let i = 1; i <= limit; i++) {
+                collatzTable[i] = getNextCollatzNumber(i);
+            }
+            return collatzTable;
+        }
+
+		function collatzMax(n) {
+			if (n <= 0) {
+				throw new Error("Input must be a positive integer.");
+			}
+
+			let max = n; // Initialize max as the starting number
+			let current = n;
+
+			while (current !== 1) {
+				if (current % 2 === 0) {
+					current = current / 2; // Even: divide by 2
+				} else {
+					current = 3 * current + 1; // Odd: 3n + 1
+				}
+				max = Math.max(max, current); // Update max if current is larger
+			}
+
+			return max;
+		}
+
+		/*
+				function logCollatzTable(collatzTable, limit) {
+					let result = '';
+					for (const [fromN, toNPlus1] of Object.entries(collatzTable)) {
+						if (collatzMax(fromN)<=limit)
+						result += `nodes.push({id: ${fromN}, label: '${fromN}', image: '', shape: ''});\n`;
+					}
+					for (const [fromN, toNPlus1] of Object.entries(collatzTable)) {
+						if (collatzMax(fromN)<=limit)
+						result += `edges.push({from: ${fromN}, to: ${toNPlus1}, length: EDGE_LENGTH_SUB});\n`;
+					}
+					return result;
+				}
+
+				function displayCollatzTable() {
+					const limit = 200;
+					const collatzTable = generateCollatzTable(limit);
+					const outputElement = document.getElementById('output');
+					outputElement.textContent = logCollatzTable(collatzTable, limit);
+				}
+		*/
+
+  
+  //http://ichef.bbci.co.uk/wwfeatures/wm/live/624_351/images/live/p0/47/2t/p0472tzv.jpg
+    var nodes = null;
+    var edges = null;
+    var network = null;
+
+    var DIR = 'http://visjs.org/examples/network/img/refresh-cl/';
+    var EDGE_LENGTH_MAIN = 300;
+    var EDGE_LENGTH_SUB = 50;
+
+    // Called when the Visualization API is loaded.
+    function draw() {
+      // Create a data table with nodes.
+      nodes = [];
+
+      // Create a data table with links.
+      edges = [];
+
+	//generate nodes and edges
+	const limit = 300;
+	const collatzTable = generateCollatzTable(limit);
+
+	for (const [fromN, toNPlus1] of Object.entries(collatzTable)) {
+		if (collatzMax(fromN)<=limit)
+			nodes.push({id: fromN, label: fromN, color: (fromN % 2 === 0?'red':'green'), image: '', shape: ''});
+	}
+	for (const [fromN, toNPlus1] of Object.entries(collatzTable)) {
+		if (collatzMax(fromN)<=limit)
+			edges.push({from: fromN, to: toNPlus1, length: EDGE_LENGTH_SUB});
+	}
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+      var options = {};
+      network = new vis.Network(container, data, options);
+    }
+  </script>
+</head>
+
+<body onload="draw()">
+
+<div id="mynetwork"></div>
+
+</body>
+</html>
