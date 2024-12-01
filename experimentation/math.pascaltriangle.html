@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pascal's Triangle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .triangle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin: 0px 0;
+        }
+
+		.hover-div:hover {
+			background-color: coral; /* Color changes on hover */
+		}		
+
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 30px;
+            margin: 2px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="triangle" id="triangle"></div>
+
+    <script>
+        function generatePascalTriangle(rows) {
+            const triangle = document.getElementById('triangle');
+
+            // Generate Pascal's Triangle
+            const pascal = [];
+            for (let r = 0; r < rows; r++) {
+                pascal[r] = [];
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'row hover-div';
+
+                for (let c = 0; c <= r; c++) {
+                    // Calculate value: pascal[r][c] = (r-1, c-1) + (r-1, c) or 1
+                    pascal[r][c] = (c === 0 || c === r) ? 1 : pascal[r - 1][c - 1] + pascal[r - 1][c];
+
+                    // Create and append the cell to the row
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'cell';
+                    cellDiv.textContent = pascal[r][c];
+                    rowDiv.appendChild(cellDiv);
+                }
+
+                // Append the row to the triangle
+                triangle.appendChild(rowDiv);
+            }
+        }
+
+        // Generate Pascal's Triangle with 10 rows
+        generatePascalTriangle(60);
+    </script>
+</body>
+</html>
