@@ -82,9 +82,9 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 			<?php addButton('Show duplicates'                       ,'Duplicates'   ,'COMMAND_DUPLICATES'); ?>
 			<?php addButton('Sort and remove duplicates'            ,'Unique list'  ,'COMMAND_UNIQUE_LIST'); ?>
 			<?php addButton('Fuzzy search and check for duplicates' ,'Similar texts','COMMAND_SIMILAR'); ?>
-			<?php addButton('Surround lines with text'              ,'Surround'     ,'COMMAND_PREFIX_PARAMS'); ?>
+			<?php addButton('SQL format/ Surround with text'        ,'Surround'     ,'COMMAND_PREFIX_PARAMS'); ?>
 			<?php addButton('Strings between'                       ,'Strings between','COMMAND_CSV'); ?>
-			<?php addButton('Remove lines','Remove lines'  ,'COMMAND_ERASE_PARAMS'); ?>
+			<?php addButton('Hide lines','Hide lines'               ,'COMMAND_ERASE_PARAMS'); ?>
 			<?php addButton('Search and replace'                    ,'Replace'      ,'COMMAND_REPLACE'); ?>
 			<?php addButton('Check the length'                      ,'Max Len'      ,'COMMAND_MAXLEN'); ?>
 			<?php addButton('Decode and encode text'                ,'Base64'       ,'COMMAND_BASE64_PARAMS'); ?>
@@ -157,16 +157,42 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 
 				<div class="card">
 				  <div class="card-header">
-					Surround lines with text
+					SQL Format / Surround lines with text
 				  </div>
 				  <div class="card-body flex-fill">
 					<h5 class="card-title"></h5>
+
 					  <div class="mb-3">
+						  <label>
+							<input type="checkbox" id="chbsqlformat" onchange="updateSqlFormat()" <?php echo ($_POST['hsqlformat']=='NO') ? "" : "checked";?> > SQL Format
+						  </label>					  
+					  </div>	
+					  <script>
+						function updateSqlFormat() {
+						  const checkbox = document.getElementById("chbsqlformat");
+						  const textField = document.getElementById("sqlformat");
+
+						  textField.value = checkbox.checked ? "YES" : "NO";
+						  
+						  const divPrefix = document.getElementById("divPrefix");
+						  const divPostfix = document.getElementById("divPostfix");
+						  
+						  divPrefix.style.display = checkbox.checked ? "none" : "";
+						  divPostfix.style.display = checkbox.checked ? "none" : "";
+						}
+						window.onload = updateSqlFormat;
+					  </script>
+
+					  <div class="mb-3">
+						<input type="hidden" class="form-control" name="sqlformat" id="sqlformat" value="<?php echo ($_POST['hsqlformat']=='') ? ",'" : $_POST['hsqlformat'];?>">
+					  </div>	
+
+					  <div class="mb-3" id="divPrefix">
 						<label for="prefix" class="form-label">Prefix</label>
 						<input type="text" class="form-control" id="prefix" value="<?php echo ($_POST['hprefix']=='') ? ",'" : $_POST['hprefix'];?>">
 					  </div>	
 					  
-					  <div class="mb-3">
+					  <div class="mb-3"  id="divPostfix">
 						<label for="postfix" class="form-label">Postfix</label>
 						<input type="text" class="form-control" id="postfix" value="<?php echo ($_POST['hpostfix']=='') ? "'" : $_POST['hpostfix'];?>">
 					  </div>										
@@ -244,7 +270,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 
 				<div class="card">
 				  <div class="card-header">
-					Remove lines
+					Hide lines
 				  </div>
 				  <div class="card-body flex-fill">
 					<button type="button" class="btn btn-outline-secondary" onclick="executeCommand(this, 'COMMAND_ERASE_WITH_RUN');">Erase lines with texts</button>
@@ -437,6 +463,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 				document.getElementById("origText").value=document.getElementById("outputText").value;
 			}
 			if (e=='COMMAND_PREFIX_RUN') {
+				document.getElementById("hsqlformat").value=document.getElementById("sqlformat").value;
 				document.getElementById("hprefix").value=document.getElementById("prefix").value;
 				document.getElementById("hpostfix").value=document.getElementById("postfix").value;
 			}
@@ -475,6 +502,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 		</script>
 		<form id="action" action="" method="POST">
 			<input type="hidden" id="command" name="command" value=""/>
+			<input type="hidden" id="hsqlformat" name="hsqlformat" value="<?php echo $_POST['hsqlformat'];?>"/>
 			<input type="hidden" id="hprefix" name="hprefix" value="<?php echo $_POST['hprefix'];?>"/>
 			<input type="hidden" id="hpostfix" name="hpostfix" value="<?php echo $_POST['hpostfix'];?>"/>
 			<input type="hidden" id="hseparator" name="hseparator" value="<?php echo $_POST['hseparator'];?>"/>
@@ -559,9 +587,19 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 						$insideLoop = true;
 					  }
 					}
-					if ($insideLoop==false) {
-					print "No duplicates". PHP_EOL;
+					
+					$insideLoop = false;
+					foreach($res as $key => $value) {
+					  if ($value==1) {
+						if ($insideLoop==false) {
+						print "" . PHP_EOL;
+						print "[Text] => No duplicates" . PHP_EOL;
+						}
+						print "[" . $key . "] => " . $value . PHP_EOL;
+						$insideLoop = true;
+					  }
 					}
+					
 				}	
 
 				if ($_POST['command']=='COMMAND_SIMILAR') {
@@ -602,10 +640,35 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 				}	
 
 				if ($_POST['command']=='COMMAND_PREFIX_RUN') {
-					$ids = explode("\n", str_replace("\r", "", $input));	
-					foreach ($ids as $x) {
-					  echo $_POST['hprefix']."$x".$_POST['hpostfix'].PHP_EOL;
-					}
+					$ids2 = explode("\n", str_replace("\r", "", $input));
+					//Remove empty values
+					$ids = array_filter($ids2, function($val) {
+						return $val !== '';
+					});
+					
+					if ($_POST['hsqlformat']=='YES') {
+					    echo "Id in (";
+
+						// Step 2: Wrap each element in single quotes
+						$quoted = array_map(function($item) {
+							return "'" . trim($item) . "'";
+						}, $ids);
+
+						// Step 3: Join with pipe separator
+						$result = implode(",", $quoted);
+
+						echo $result; // Output: 'X'|'Y'|'Z'
+						
+						echo ")";
+					} else {
+						foreach ($ids as $x) {											
+							if (trim($x) === '') {
+								//ignore blanks						
+							} else {
+								echo $_POST['hprefix']."$x".$_POST['hpostfix'].PHP_EOL;
+							}				
+						}
+					}					
 				}	
 
 				if ($_POST['command']=='COMMAND_CSV_RUN') {
