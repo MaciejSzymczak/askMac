@@ -81,7 +81,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 			<?php addButton('Beautify'                              ,'Beautify'    ,'COMMAND_NORMALIZE'); ?>
 			<?php addButton('Duplicates: Show'                      ,'Duplicates'   ,'COMMAND_DUPLICATES'); ?>
 			<?php addButton('Duplicates: Remove'                    ,'Unique list'  ,'COMMAND_UNIQUE_LIST'); ?>
-			<?php addButton('Fuzzy search and check for duplicates' ,'Similar texts','COMMAND_SIMILAR'); ?>
+			<?php addButton('Duplicates: Fuzzy search'              ,'Fuzzy search','COMMAND_SIMILAR'); ?>
 			<?php addButton('SQL format/ Surround with text'        ,'Format'     ,'COMMAND_PREFIX_PARAMS'); ?>
 			<?php addButton('Extract columns'                       ,'Extract columns','COMMAND_CSV'); ?>
 			<?php addButton('Extract lines'                         ,'Extract lines','COMMAND_ERASE_PARAMS'); ?>
