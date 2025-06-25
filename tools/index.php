@@ -78,13 +78,13 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
         <div class="container">
 
           <div class="row">		  		  
-			<?php addButton('Format lines'                          ,'Normalize'    ,'COMMAND_NORMALIZE'); ?>
-			<?php addButton('Show duplicates'                       ,'Duplicates'   ,'COMMAND_DUPLICATES'); ?>
-			<?php addButton('Sort and remove duplicates'            ,'Unique list'  ,'COMMAND_UNIQUE_LIST'); ?>
+			<?php addButton('Beautify'                              ,'Beautify'    ,'COMMAND_NORMALIZE'); ?>
+			<?php addButton('Duplicates: Show'                      ,'Duplicates'   ,'COMMAND_DUPLICATES'); ?>
+			<?php addButton('Duplicates: Remove'                    ,'Unique list'  ,'COMMAND_UNIQUE_LIST'); ?>
 			<?php addButton('Fuzzy search and check for duplicates' ,'Similar texts','COMMAND_SIMILAR'); ?>
-			<?php addButton('SQL format/ Surround with text'        ,'Surround'     ,'COMMAND_PREFIX_PARAMS'); ?>
-			<?php addButton('Strings between'                       ,'Strings between','COMMAND_CSV'); ?>
-			<?php addButton('Hide lines','Hide lines'               ,'COMMAND_ERASE_PARAMS'); ?>
+			<?php addButton('SQL format/ Surround with text'        ,'Format'     ,'COMMAND_PREFIX_PARAMS'); ?>
+			<?php addButton('Extract columns'                       ,'Extract columns','COMMAND_CSV'); ?>
+			<?php addButton('Extract lines'                         ,'Extract lines','COMMAND_ERASE_PARAMS'); ?>
 			<?php addButton('Search and replace'                    ,'Replace'      ,'COMMAND_REPLACE'); ?>
 			<?php addButton('Check the length'                      ,'Max Len'      ,'COMMAND_MAXLEN'); ?>
 			<?php addButton('Decode and encode text'                ,'Base64'       ,'COMMAND_BASE64_PARAMS'); ?>
@@ -118,7 +118,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 
 				<div class="card">
 				  <div class="card-header">
-					Format lines
+					Beautify
 				  </div>
 				  <div class="card-body flex-fill">
 					<h5 class="card-title"></h5>
@@ -196,7 +196,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 						<label for="postfix" class="form-label">Postfix</label>
 						<input type="text" class="form-control" id="postfix" value="<?php echo ($_POST['hpostfix']=='') ? "'" : $_POST['hpostfix'];?>">
 					  </div>										
-					<button type="button" class="btn btn-outline-secondary" onclick="executeCommand(this, 'COMMAND_PREFIX_RUN');">Add prefix and/or postfix</button>
+					<button type="button" class="btn btn-outline-secondary" onclick="executeCommand(this, 'COMMAND_PREFIX_RUN');">Format</button>
 				  </div>
 				</div>
 
@@ -227,7 +227,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 
 				<div class="card">
 				  <div class="card-header">
-					Strings between
+					Extract columns
 				  </div>
 				  <div class="card-body flex-fill">
 					<h5 class="card-title"></h5>
@@ -270,7 +270,7 @@ function addButton($hintText, $buttonText, $buttonAPIName) {
 
 				<div class="card">
 				  <div class="card-header">
-					Hide lines
+					Extract lines
 				  </div>
 				  <div class="card-body flex-fill">
 					<button type="button" class="btn btn-outline-secondary" onclick="executeCommand(this, 'COMMAND_ERASE_WITH_RUN');">Erase lines with texts</button>
